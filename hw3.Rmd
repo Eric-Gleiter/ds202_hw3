@@ -1,0 +1,99 @@
+---
+title: "Homework 3"
+author: "Eric Gleiter; Git hub: Eric-Gleiter"
+date: "2/19/2020"
+output: html_document
+---
+*Note: All package checks and installations code is hidden on the html* 
+
+```{r echo=FALSE, results='hide', message=FALSE}
+if (!require("ggplot2")) {
+install.packages("ggplot2")
+}
+
+if (!require("reshape2")) {
+install.packages("reshape2")
+}
+
+data(tips, package = 'reshape2')
+
+```
+
+
+** Question 1)**
+```{r}
+numParty <- length(tips$size)
+numParty
+```
+The waiter Served 244 parties
+
+
+**Question 2)**
+```{r}
+str(tips)
+```
+In the data frame there are 7 variables 2 are numbers. They Are total_bill and tip which are the dollar amount of the bill and tip respectively. There are 4 factors: sex, smoker,day, and time. These are the gender of the bill payer, whether or not there were smokers in the party, the day of the week, and the time of day. Finally there is one integer variable. That being the size of the party. 
+
+
+**Question 3)**
+```{r}
+day <- factor(tips$day,  levels = c('Thur','Fri','Sat','Sun')) #ensures correct factor level order
+day
+```
+
+
+**Question 4)**
+```{r}
+
+female5 <- tips[tips$sex == "Female" & tips$size >= 5, ]
+female5
+
+```
+
+
+**Question 5)**
+```{r}
+ggplot(data = tips, aes(x = total_bill, y = tip)) + geom_point() + xlab("Total Bill") + ylab("Amount Tipped") + labs(title = "Amount Tipped vs Total Bill")
+```
+As you can see from the chart in general as the total cost of the bill increases so does the amount tipped. It is interesting to note that at higher bill costs there seems to be more variation in tip amount. 
+
+**Question 6)**
+Like I previously stated it is interesting that as the bill cost goes up the data is more spread out. This could be simply that there is more variation in tip for larger bills. Additionally there is an extremely high tip compared to total bill at around x=6. This outlier could be a tipper who was very please with the server and left an extremely large tip.
+
+
+**Question 7)**
+```{r}
+tips$tiprate <- tips$tip / (tips$total_bill - tips$tip)
+
+TipRate <- tips$tiprate
+
+mean(TipRate)
+```
+
+The average party tips about 20% of the bill to the server
+
+
+**Question 8)**
+```{r}
+tips$time <- factor(tips$time, levels = c("Lunch","Dinner"))
+ggplot(data = tips, aes(x = time, y = tiprate)) + geom_boxplot() + xlab("Time of Day") + ylab("Tip Rate") + labs(title = "Time of Day vs Tip Rate Box plot")
+```
+
+The actual boxes of the box plots are very similar meaning that most of the tips at both dinner and lunch are similar. However it is very clear that Dinner has many more outliers and also has more extreme outliers, this suggests that the biggest tips come at dinner time.
+
+
+**Question 9)**
+```{r}
+ggplot(data = tips, aes(x = total_bill, y = tip)) + geom_point(aes(shape = sex, color = smoker)) + xlab("Total Bill") + ylab("Amount Tipped") + labs(title = "Amount Tipped vs Total Bill") 
+```
+
+As can be seen on the chart there really isn't any connection for smokers to the amount tipped vs total bill chart. However it is interesting that most of the highest bills where paid for by men and most of the  largest tips were also by men, while the smallest bills and tips were from women.
+
+
+**Question 10)**
+```{r}
+ggplot(data = tips, aes(fill=sex, x= day)) + geom_bar(position="dodge")
+```
+
+On every day of the week except Thursday, men are paying for more of the meals. This matches well with what is observed in question 9 where we see many more males paying for the meal than females.
+
